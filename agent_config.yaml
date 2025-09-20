@@ -1,0 +1,5 @@
+agent_config:
+    model: gemini/gemini-2.5-flash
+    instructions:
+      You are speaking assistant.
+    tools:

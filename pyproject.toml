@@ -1,0 +1,117 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speaking-llm"
+version = "0.1.0"
+description = "Speaking LLM with speech synthesis and recognition"
+authors = [{name = "Speaking LLM Team"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+    "llama_stack>=0.2.19",
+    "llama_stack_client>=0.2.19",
+    "gTTS>=2.3.0",
+    "pyaudio>=0.2.11",
+    "pygame>=2.0.0",
+    "SpeechRecognition>=3.10.0",
+]
+
+[project.scripts]
+speaking-llm = "speaking_llm.speaking_llm:cli_main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["speaking_llm*"]
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+    "pylint>=2.17.0",
+    "pre-commit>=3.0.0",
+    "autopep8",
+    "pytest>=8.4.0",
+    "pytest-asyncio>=1.1.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310', 'py311', 'py312', 'py313']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+  | \.pytest_cache
+  | \.venv
+  | venv
+  | old
+  | \.cursor
+  | \.conflicts
+  | node_modules
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["speaking_llm"]
+skip_glob = ["old/*", ".cursor/*", ".conflicts/*", "node_modules/*"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+disallow_untyped_decorators = false
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+exclude = [
+    "old/",
+    ".cursor/",
+    ".conflicts/",
+]
+
+[[tool.mypy.overrides]]
+module = [
+    "speech_recognition.*",
+    "pygame.*",
+    "gtts.*",
+    "llama_stack.*",
+    "llama_stack_client.*",
+]
+ignore_missing_imports = true
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-docstring",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-locals",
+    "line-too-long",  # handled by black
+    "invalid-name",
+    "broad-except",
+]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+asyncio_mode = "auto"
