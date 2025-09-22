@@ -48,7 +48,7 @@ async def agent_session():
 
 
 async def turn(prompt_text: str, session_id: str) -> None:
-    print("Thinkig... ⚙️", end='', file=sys.stderr, flush=True)
+    print("Thinking... ⚙️", end='', file=sys.stderr, flush=True)
     while True:
         r = await agent.create_turn([{"role": "user", "content": prompt_text}], session_id, stream=False)
         if r.output_message.content:
