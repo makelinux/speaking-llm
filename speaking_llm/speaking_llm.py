@@ -112,7 +112,15 @@ async def voice_loop(processor_func, welcome_msg: str):
         print("No working microphone found!", file=sys.stderr)
         return
 
+    config = {}
+    try:
+        with open("speaking_llm.yaml", "r", encoding="utf-8") as f:
+            config = yaml.safe_load(f)
+    except Exception as e:
+        pass
     r = sr.Recognizer()
+    vars(r).update(config.get("Recognizer",{}))
+    print(r.pause_threshold)
     with mic as source:
         print("Calibrating ambient noise...", file=sys.stderr)
         r.adjust_for_ambient_noise(source, duration=1)
